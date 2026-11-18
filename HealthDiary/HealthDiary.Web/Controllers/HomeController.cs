@@ -1,4 +1,4 @@
-using HealthDiary.Web.Models;
+using HealthDiary.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

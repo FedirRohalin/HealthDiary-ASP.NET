@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthDiary.Web", "HealthDiary.Web\HealthDiary.Web.csproj", "{2245E207-DAFB-4410-8845-8721E25865E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthDiary.Data", "HealthDiary.Data\HealthDiary.Data.csproj", "{23EAA140-FA77-4C2B-BF04-F16941CCB350}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2245E207-DAFB-4410-8845-8721E25865E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2245E207-DAFB-4410-8845-8721E25865E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2245E207-DAFB-4410-8845-8721E25865E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23EAA140-FA77-4C2B-BF04-F16941CCB350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23EAA140-FA77-4C2B-BF04-F16941CCB350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23EAA140-FA77-4C2B-BF04-F16941CCB350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23EAA140-FA77-4C2B-BF04-F16941CCB350}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
