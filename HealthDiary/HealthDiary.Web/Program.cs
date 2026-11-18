@@ -2,6 +2,8 @@ using HealthDiary.Data.Models;
 using HealthDiary.Data.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using HealthDiary.Data.Interfaces;
+using HealthDiary.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddScoped<IHealthDiaryRepository, HealthDiaryRepository>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

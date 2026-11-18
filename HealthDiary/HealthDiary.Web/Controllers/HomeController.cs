@@ -1,3 +1,4 @@
+using HealthDiary.Data.Interfaces;
 using HealthDiary.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -7,15 +8,21 @@ namespace HealthDiary.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IHealthDiaryRepository _repository;
 
-        public HomeController(ILogger<HomeController> logger)
+        // Впровадження залежностей (Dependency Injection) через конструктор
+        public HomeController(ILogger<HomeController> logger, IHealthDiaryRepository repository)
         {
             _logger = logger;
+            _repository = repository;
         }
 
         public IActionResult Index()
         {
-            return View();
+            // Використання репозиторію для отримання всіх користувачів
+            var users = _repository.All<ApplicationUser>().ToList();
+
+            return View(users);
         }
 
         public IActionResult Privacy()
