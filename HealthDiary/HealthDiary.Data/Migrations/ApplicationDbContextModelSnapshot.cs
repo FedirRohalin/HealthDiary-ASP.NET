@@ -93,6 +93,188 @@ namespace HealthDiary.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("HealthDiary.Data.Models.Doctor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContactEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ExperienceYears")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("HealthDiary.Data.Models.GaitAnalysis", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AnalysisDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CVProcessingLog")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("NeedsCorrection")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PronationAngle")
+                        .HasColumnType("float");
+
+                    b.Property<string>("VideoFilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("GaitAnalyses");
+                });
+
+            modelBuilder.Entity("HealthDiary.Data.Models.InsoleOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("GCodeFilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GaitAnalysisId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PrinterModel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GaitAnalysisId");
+
+                    b.ToTable("InsoleOrders");
+                });
+
+            modelBuilder.Entity("HealthDiary.Data.Models.Material", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("ExtrusionTemp")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PricePerGram")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<double>("ShoreHardness")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Materials");
+                });
+
+            modelBuilder.Entity("HealthDiary.Data.Models.Patient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DiagnosisNotes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("ShoeSize")
+                        .HasColumnType("float");
+
+                    b.Property<double>("WeightKg")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("InsoleOrderMaterial", b =>
+                {
+                    b.Property<int>("InsoleOrdersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaterialsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("InsoleOrdersId", "MaterialsId");
+
+                    b.HasIndex("MaterialsId");
+
+                    b.ToTable("InsoleOrderMaterials", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -230,6 +412,51 @@ namespace HealthDiary.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("HealthDiary.Data.Models.GaitAnalysis", b =>
+                {
+                    b.HasOne("HealthDiary.Data.Models.Doctor", "Doctor")
+                        .WithMany("GaitAnalyses")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HealthDiary.Data.Models.Patient", "Patient")
+                        .WithMany("GaitAnalyses")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("HealthDiary.Data.Models.InsoleOrder", b =>
+                {
+                    b.HasOne("HealthDiary.Data.Models.GaitAnalysis", "GaitAnalysis")
+                        .WithMany("InsoleOrders")
+                        .HasForeignKey("GaitAnalysisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GaitAnalysis");
+                });
+
+            modelBuilder.Entity("InsoleOrderMaterial", b =>
+                {
+                    b.HasOne("HealthDiary.Data.Models.InsoleOrder", null)
+                        .WithMany()
+                        .HasForeignKey("InsoleOrdersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HealthDiary.Data.Models.Material", null)
+                        .WithMany()
+                        .HasForeignKey("MaterialsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -279,6 +506,21 @@ namespace HealthDiary.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HealthDiary.Data.Models.Doctor", b =>
+                {
+                    b.Navigation("GaitAnalyses");
+                });
+
+            modelBuilder.Entity("HealthDiary.Data.Models.GaitAnalysis", b =>
+                {
+                    b.Navigation("InsoleOrders");
+                });
+
+            modelBuilder.Entity("HealthDiary.Data.Models.Patient", b =>
+                {
+                    b.Navigation("GaitAnalyses");
                 });
 #pragma warning restore 612, 618
         }
