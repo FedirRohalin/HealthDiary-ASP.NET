@@ -1,7 +1,7 @@
 using HealthDiary.Data.Interfaces;
 using HealthDiary.Data.Models;
+using HealthDiary.Web.Configurations;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace HealthDiary.Web.Controllers
 {
@@ -9,31 +9,34 @@ namespace HealthDiary.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IHealthDiaryRepository _repository;
+        private readonly AppConfiguration _config;
 
-        // Впровадження залежностей (Dependency Injection) через конструктор
-        public HomeController(ILogger<HomeController> logger, IHealthDiaryRepository repository)
+        public HomeController(
+            ILogger<HomeController> logger,
+            IHealthDiaryRepository repository,
+            AppConfiguration config)
         {
             _logger = logger;
             _repository = repository;
+            _config = config;
         }
 
         public IActionResult Index()
         {
-            // Використання репозиторію для отримання всіх користувачів
             var users = _repository.All<ApplicationUser>().ToList();
+
+            // Передача параметрів конфігурації у ViewData для Footer
+            ViewData["ApplicationName"] = _config.ApplicationName;
+            ViewData["PrinterModel"] = _config.StepLabSettings.DefaultPrinterModel;
 
             return View(users);
         }
 
         public IActionResult Privacy()
         {
+            ViewData["ApplicationName"] = _config.ApplicationName;
+            ViewData["PrinterModel"] = _config.StepLabSettings.DefaultPrinterModel;
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
