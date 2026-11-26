@@ -6,6 +6,8 @@ using HealthDiary.Data.Interfaces;
 using HealthDiary.Data.Repositories;
 using HealthDiary.Web.Configurations;
 using System.Threading.RateLimiting;
+using HealthDiary.Web.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,10 +72,47 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddScoped<IHealthDiaryRepository, HealthDiaryRepository>();
 builder.Services.AddControllersWithViews();
+
+// Шляхи для перенаправлення при відсутності автентифікації / доступу
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
+
+// Налаштування політик авторизації (Завдання 1–5)
+builder.Services.AddAuthorization(options =>
+{
+    // Завдання 1: глобальна вимога автентифікації для всіх сторінок (крім [AllowAnonymous])
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
+    // Завдання 2: Архів матеріалів лише для IsVerifiedClient
+    options.AddPolicy("VerifiedClientOnly", policy =>
+        policy.RequireClaim("IsVerifiedClient", "true"));
+
+    // Завдання 3: Ресурсна авторизація (редагування лише автором)
+    options.AddPolicy("CanEditMaterial", policy =>
+        policy.AddRequirements(new IsMaterialOwnerRequirement()));
+
+    // Завдання 4: Преміум (WorkingHours >= 100)
+    options.AddPolicy("PremiumAccess", policy =>
+        policy.AddRequirements(new MinimumWorkingHoursRequirement(100)));
+
+    // Завдання 5: Форум (хоча б одне з 3 тверджень)
+    options.AddPolicy("ForumAccess", policy =>
+        policy.AddRequirements(new ForumAccessRequirement()));
+});
+
+// Реєстрація обробників авторизації у DI
+builder.Services.AddScoped<IAuthorizationHandler, IsMaterialOwnerHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, MinimumWorkingHoursHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, ForumAccessHandler>();
 
 var app = builder.Build();
 
@@ -94,9 +133,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
-
-app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization(); 
 app.UseRateLimiter();
 
 app.MapControllerRoute(

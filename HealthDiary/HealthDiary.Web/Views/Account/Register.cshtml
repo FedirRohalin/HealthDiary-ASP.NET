@@ -1,0 +1,30 @@
+﻿<h2>Реєстрація (Step Lab)</h2>
+<div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="Register" method="post" class="w-50">
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input name="email" type="email" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Пароль</label>
+        <input name="password" type="password" class="form-control" required />
+    </div>
+    <div class="form-check mb-3">
+        <input name="isVerifiedClient" value="true" type="checkbox" class="form-check-input" id="verifiedCheck" />
+        <label class="form-check-label" for="verifiedCheck">Додати твердження IsVerifiedClient (доступ до Архіву матеріалів)</label>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">WorkingHours (від 100 для доступу до Преміум)</label>
+        <input name="workingHours" type="number" value="0" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Твердження для Форуму</label>
+        <select name="forumClaim" class="form-select">
+            <option value="">Без доступу</option>
+            <option value="IsMentor">IsMentor</option>
+            <option value="IsVerifiedUser">IsVerifiedUser</option>
+            <option value="HasForumAccess">HasForumAccess</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Зареєструватися</button>
+</form>

@@ -1,0 +1,11 @@
+﻿@model HealthDiary.Data.Models.Material
+<h2>Редагування матеріалу</h2>
+<form asp-action="Edit" method="post" class="w-50">
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-2"><label>Назва</label><input asp-for="Name" class="form-control" required /></div>
+    <div class="mb-2"><label>Колір</label><input asp-for="Color" class="form-control" required /></div>
+    <div class="mb-2"><label>Твердість (Shore)</label><input asp-for="ShoreHardness" type="number" step="0.1" class="form-control" /></div>
+    <div class="mb-2"><label>Ціна за грам</label><input asp-for="PricePerGram" type="number" step="0.01" class="form-control" /></div>
+    <div class="mb-3"><label>Температура екструзії</label><input asp-for="ExtrusionTemp" type="number" step="0.1" class="form-control" /></div>
+    <button type="submit" class="btn btn-primary">Оновити</button>
+</form>
