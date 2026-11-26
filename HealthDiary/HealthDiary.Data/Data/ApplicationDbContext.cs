@@ -49,4 +49,4 @@ namespace HealthDiary.Data.Data
                 .UsingEntity(j => j.ToTable("InsoleOrderMaterials")); // Створення проміжної таблиці
         }
     }
-}
+}   
