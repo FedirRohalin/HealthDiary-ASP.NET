@@ -2,6 +2,7 @@ using HealthDiary.Data.Interfaces;
 using HealthDiary.Data.Models;
 using HealthDiary.Web.Configurations;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HealthDiary.Web.Controllers
 {
@@ -20,7 +21,7 @@ namespace HealthDiary.Web.Controllers
             _repository = repository;
             _config = config;
         }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var users = _repository.All<ApplicationUser>().ToList();
@@ -36,6 +37,20 @@ namespace HealthDiary.Web.Controllers
         {
             ViewData["ApplicationName"] = _config.ApplicationName;
             ViewData["PrinterModel"] = _config.StepLabSettings.DefaultPrinterModel;
+            return View();
+        }
+
+        // Завдання 4: Преміум (WorkingHours >= 100)
+        [Authorize(Policy = "PremiumAccess")]
+        public IActionResult Premium()
+        {
+            return View();
+        }
+
+        // Завдання 5: Форум (IsMentor, IsVerifiedUser або HasForumAccess)
+        [Authorize(Policy = "ForumAccess")]
+        public IActionResult Forum()
+        {
             return View();
         }
     }

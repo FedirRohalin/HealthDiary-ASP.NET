@@ -8,6 +8,7 @@
         public double ShoreHardness { get; set; }
         public decimal PricePerGram { get; set; }
         public double ExtrusionTemp { get; set; }
+        public string? AuthorId { get; set; }
 
         // Навігаційна властивість (M:N до InsoleOrder)
         public ICollection<InsoleOrder> InsoleOrders { get; set; } = new List<InsoleOrder>();
