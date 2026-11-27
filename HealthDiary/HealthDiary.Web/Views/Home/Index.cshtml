@@ -1,8 +1,17 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Title"];
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mt-4">
+    <h1 class="display-4">@Localizer["Title"]</h1>
+    <p class="lead text-primary">@ViewData["WelcomeMessage"]</p>
+
+    <div class="card w-50 mx-auto mt-4 p-3 text-start">
+        <p><strong>@Localizer["DateLabel"]</strong> @DateTime.Now.ToLongDateString()</p>
+        <p><strong>@Localizer["PriceLabel"]</strong> @(3500.50m.ToString("C"))</p>
+        <p class="mb-0"><strong>@Localizer["NumberLabel"]</strong> @(125000.75.ToString("N2"))</p>
+    </div>
 </div>
