@@ -3,6 +3,7 @@ using HealthDiary.Data.Models;
 using HealthDiary.Web.Configurations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Localization;
 
 namespace HealthDiary.Web.Controllers
 {
@@ -11,16 +12,20 @@ namespace HealthDiary.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IHealthDiaryRepository _repository;
         private readonly AppConfiguration _config;
+        private readonly IStringLocalizer<HomeController> _localizer; 
 
         public HomeController(
             ILogger<HomeController> logger,
             IHealthDiaryRepository repository,
-            AppConfiguration config)
+            AppConfiguration config,                                   
+            IStringLocalizer<HomeController> localizer)                
         {
             _logger = logger;
             _repository = repository;
             _config = config;
+            _localizer = localizer;                                    
         }
+
         [AllowAnonymous]
         public IActionResult Index()
         {
@@ -29,6 +34,9 @@ namespace HealthDiary.Web.Controllers
             // Передача параметрів конфігурації у ViewData для Footer
             ViewData["ApplicationName"] = _config.ApplicationName;
             ViewData["PrinterModel"] = _config.StepLabSettings.DefaultPrinterModel;
+
+            // Передача локалізованого повідомлення з HomeController.resx
+            ViewData["WelcomeMessage"] = _localizer["WelcomeMessage"]; 
 
             return View(users);
         }

@@ -75,8 +75,20 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddScoped<IHealthDiaryRepository, HealthDiaryRepository>();
-builder.Services.AddControllersWithViews();
+// Налаштування локалізації (Завдання 2, 4)
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
+var supportedCultures = new[] { "uk-UA", "en-US", "fr-FR" };
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.SetDefaultCulture("uk-UA")
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
+});
+
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
 // Шляхи для перенаправлення при відсутності автентифікації / доступу
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -130,6 +142,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseRequestLocalization();
 
 app.UseRouting();
 
